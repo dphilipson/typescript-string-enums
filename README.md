@@ -112,7 +112,7 @@ const Status = {
 ```
 This library provides the convenience of built-in enums, but with string values intead of integers.
 
-## How it Works
+## How It Works
 
 This section is not necessary to use this library, but for those curious about how it is implemented, read on.
 
@@ -153,5 +153,11 @@ passing in each key (the syntax `T[keyof T]` is meant to evoke `t[key]` for each
 applied to the type from the previous step, we end up with the union of the types of the values,
 hence `Enum<typeof Enum("RUNNING", "STOPPED")>` evaluates to `"RUNNING" | "STOPPED"`, which is what
 we want.
+
+## Acknowledgements
+
+This libary is heavily inspired by posts in
+[this thread](https://github.com/Microsoft/TypeScript/issues/3192). In particular, credit goes to
+users **[@igrayson](https://github.com/igrayson)** and **[@nahuel](https://github.com/nahuel)**.
 
 Copyright © 2017 David Philipson
