@@ -1,0 +1,53 @@
+{
+  "name": "typescript-string-enums",
+  "version": "0.1.0",
+  "description": "Typesafe string enums in TypeScript.",
+  "main": "dist/index.js",
+  "types": "dist/index",
+  "files": [
+    "dist/"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/dphilipson/typescript-string-enums.git"
+  },
+  "keywords": [
+    "typescript",
+    "string",
+    "enum"
+  ],
+  "author": "David Philipson <dphilipson@gmail.com> (http://dphil.me)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dphilipson/typescript-string-enums/issues"
+  },
+  "homepage": "https://github.com/dphilipson/typescript-string-enums#readme",
+  "scripts": {
+    "clean": "rm -rf dist",
+    "build": "yarn run clean && tsc",
+    "jest": "jest",
+    "jest-watch": "yarn run jest -- --watch",
+    "lint": "tslint --project .",
+    "prepublish": "yarn run build",
+    "test": "yarn run lint && tsc --noEmit && yarn run jest",
+    "watch": "yarn run clean && tsc --watch"
+  },
+  "devDependencies": {
+    "@types/jest": "^16.0.4",
+    "jest": "^18.1.0",
+    "ts-jest": "^18.0.1",
+    "tslint": "^4.3.1",
+    "typescript": "^2.1.5"
+  },
+  "jest": {
+    "transform": {
+      ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ]
+  }
+}
