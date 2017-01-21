@@ -77,7 +77,7 @@ interface StoppedState {
 
 function saySomethingAboutState(state: State) {
     // The following typechecks.
-    if (state.status === RunningState.RUNNING) {
+    if (state.status === Status.RUNNING) {
         console.log("The pid is " + state.pid);
     } else if (state.status === Status.STOPPED) {
         console.log("The shutdown time is " + state.shutdownTime);
