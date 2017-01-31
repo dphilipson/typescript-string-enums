@@ -111,8 +111,8 @@ way to do it. I can't globally find/replace `"RUNNING"` to `"STARTED"` because i
 the unrelated string constants representing `TriathlonStage`. Instead, I have to examine every
 occurrance of the string `"RUNNING"` to see if it needs to change.
 
-I might try to make this step easier by introducing constants for the string literals, but this has
-problems as well:
+I might try to solve both problems by introducing constants for the string literals, but this has
+issues as well:
 
 ``` javascript
 type Status = "RUNNING" | "STOPPED";
