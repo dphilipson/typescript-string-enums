@@ -82,7 +82,7 @@ console.log(state);
 // I hope you're not expecting other services to send you objects that look like this.
 ```
 
-### Why not string literals
+### Why not string literals?
 
 Using string literals throughout a program leaves it vulnerable to bugs caused by typos or
 incomplete refactors. For example:
@@ -139,7 +139,10 @@ provide the best of both worlds: string enums with the convenience of built-in e
 
 ## How It Works
 
-This section is not necessary to use this library, but for those curious about how it is implemented, read on.
+This section is not necessary to use this library, but for those curious about how it is
+implemented, read on. The explanation uses the concepts of index types and mapped types, as
+described in TypeScript's
+[Advanced Types](https://www.typescriptlang.org/docs/handbook/advanced-types.html) page.
 
 The entire source of this library is
 
@@ -153,19 +156,27 @@ export function Enum<V extends string>(...values: V[]): { [K in V]: K } {
 export type Enum<T> = T[keyof T];
 ```
 
-We are creating a function named `Enum` and a type named `Enum`, so both can be imported with a single symbol.
+We are creating a function named `Enum` and a type named `Enum`, so both can be imported with a
+single symbol.
 
-The type signature
+In TypeScript, a string constant is a type (for example, in `const foo = "Hello"`, the
+variable `foo` is assigned type `"Hello"`). This means that the array
 
 ``` javascript
-function Enum<V extends string>(...values: V[]): { [K in V]: K } {
+["RUNNING", "STOPPED"]
 ```
 
-can be read as follows: take in an array of strings and call the different types `V`. A string
-constant is a type in TypeScript (for example, `const foo = "hello"` assigns the type `"hello"`
-to `foo`), so `V` is actually multiple string literal types. Then `{ [K in V]: K }` describes an
-object whose keys are the types that make up `V` and for each such key has a value equal to that
-key. Hence, the type of `Enum("RUNNING", "STOPPED")` is
+can be inferred to have type `("RUNNING" | "STOPPED")[]`, and so when it is passed into a function
+with type signature
+
+``` javascript
+function Enum<V extends string>(...values: V[]): { [K in V]: K }
+```
+
+the type parameter `V` is thus inferred to be `"RUNNING" | "STOPPED"`. Then the return type
+`{ [K in V]: K }` is a mapped type which describes an object whose keys are the types that
+make up `V` and for each such key has a value equal to that key. Hence, the type of
+`Enum("RUNNING", "STOPPED")` is
 
 ``` javascript
 // This is a type, not an object literal.
@@ -181,11 +192,12 @@ Next, consider the definition
 type Enum<T> = T[keyof T];
 ```
 
-This describes, for a given keyed type `T`, the type obtained by taking the values of `T` when
-passing in each key (the syntax `T[keyof T]` is meant to evoke `t[key]` for each `key` in `t`). When
-applied to the type from the previous step, we end up with the union of the types of the values,
-hence `Enum<typeof Enum("RUNNING", "STOPPED")>` evaluates to `"RUNNING" | "STOPPED"`, which is what
-we want.
+This is an index type which describes, for a given keyed type `T`, the type obtained by indexing
+into `T` with an arbitrary one of its keys (the syntax `T[keyof T]` is meant to evoke the
+expression `t[key]` for some `key` in `t`). When passing in an arbitrary key to the object from the
+previous step, we get a value which might be any one of the object's values, and so its type is thus
+the union of the types of the object's values. Hence, `Enum<typeof Enum("RUNNING", "STOPPED")>`
+evaluates to `"RUNNING" | "STOPPED"`, which is what we want.
 
 ## Acknowledgements
 
