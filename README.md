@@ -84,22 +84,7 @@ console.log(state);
 
 ### Why not string literals?
 
-Using string literals throughout a program leaves it vulnerable to bugs caused by typos or
-incomplete refactors. For example:
-
-``` javascript
-type Status = "RUNNING" | "STOPPED";
-
-...
-
-// Typo "SOTPPED" is not caught by typechecker.
-// Pretty bad bug- this block will never run.
-if (state.status === "SOTPPED") {
-    soundTheAlarm();
-}
-```
-
-Further, string literals make refactoring difficult. Suppose I have two enums:
+String literals make refactoring difficult. Suppose I have two enums:
 
 ``` javascript
 type Status = "RUNNING" | "STOPPED";
@@ -110,6 +95,10 @@ Then if at a later stage I want to change `Status` to be `"STARTED" | "STOPPED"`
 way to do it. I can't globally find/replace `"RUNNING"` to `"STARTED"` because it will also change
 the unrelated string constants representing `TriathlonStage`. Instead, I have to examine every
 occurrance of the string `"RUNNING"` to see if it needs to change.
+
+Another disadvantage of string literals comes when using IDE autocomplete features. It's convenient
+to be able to type `Status.` and have autocomplete suggest `Status.RUNNING` and `Status.STOPPED`,
+but with string literals no such suggestion appears with current IDEs.
 
 I might try to solve both problems by introducing constants for the string literals, but this has
 issues as well:
