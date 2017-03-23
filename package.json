@@ -1,6 +1,6 @@
 {
   "name": "typescript-string-enums",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Typesafe string enums in TypeScript.",
   "main": "dist/index.js",
   "types": "dist/index",
