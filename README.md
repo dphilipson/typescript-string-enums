@@ -59,6 +59,29 @@ function saySomethingAboutState(state: State) {
 }
 ```
 
+Instead of a list of values, an object may be passed instead if it is desired that the string values
+be different from the constant names. This also has the advantage of allowing JSDoc comments to be
+specified on individual values. For example:
+
+``` javascript
+export const Status = Enum({
+    /**
+     * Everything is fine.
+     *
+     * Hovering over Status.RUNNING in an IDE will show this comment.
+     */
+    RUNNING: "running",
+
+    /**
+     * All is lost.
+     */
+    STOPPED: "stopped",
+});
+export type Status = Enum<typeof Status>;
+
+console.log(Status.RUNNING); // -> "running"
+```
+
 ## Motivation
 
 Enums are useful for cleanly specifying a type that can take one of a few specific values.
@@ -133,22 +156,25 @@ implemented, read on. The explanation uses the concepts of index types and mappe
 described in TypeScript's
 [Advanced Types](https://www.typescriptlang.org/docs/handbook/advanced-types.html) page.
 
-The entire source of this library is
+The relevant type declarations are as follows:
 
 ``` javascript
-export function Enum<V extends string>(...values: V[]): { [K in V]: K } {
-    const result: any = {};
-    values.forEach((value) => result[value] = value);
-    return result;
-}
+function Enum<V extends string>(...values: V[]): { [K in V]: K };
+function Enum<
+    T extends { [_: string]: V },
+    V extends string
+>(definition: T): T;
 
-export type Enum<T> = T[keyof T];
+...
+
+type Enum<T> = T[keyof T];
 ```
 
-We are creating a function named `Enum` and a type named `Enum`, so both can be imported with a
-single symbol.
+We are creating a overloaded function named `Enum` and a type named `Enum`, so both can be imported
+with a single symbol.
 
-In TypeScript, a string constant is a type (for example, in `const foo = "Hello"`, the
+Consider the first overload, which handles the case of variadic arguments representing the enum
+values. In TypeScript, a string constant is a type (for example, in `const foo = "Hello"`, the
 variable `foo` is assigned type `"Hello"`). This means that the array
 
 ``` javascript
@@ -156,22 +182,39 @@ variable `foo` is assigned type `"Hello"`). This means that the array
 ```
 
 can be inferred to have type `("RUNNING" | "STOPPED")[]`, and so when it is passed into a function
-with type signature
-
-``` javascript
-function Enum<V extends string>(...values: V[]): { [K in V]: K }
-```
-
-the type parameter `V` is thus inferred to be `"RUNNING" | "STOPPED"`. Then the return type
-`{ [K in V]: K }` is a mapped type which describes an object whose keys are the types that
-make up `V` and for each such key has a value of the same type as that key. Hence, the type of
-`Enum("RUNNING", "STOPPED")` is
+with the above type signature, the type parameter `V` is thus inferred to be
+`"RUNNING" | "STOPPED"`. Then the return type `{ [K in V]: K }` is a mapped type which describes an
+object whose keys are the types that make up `V` and for each such key has a value of the same type
+as that key. Hence, the type of `Enum("RUNNING", "STOPPED")` is
 
 ``` javascript
 // This is a type, not an object literal.
 {
     RUNNING: "RUNNING";
     STOPPED: "STOPPED";
+}
+```
+
+Next, consider the second overload, which handles the case which takes an object of keys and values,
+and for the same of example consider
+
+``` javascript
+const Status = Enum({
+    RUNNING: "running",
+    STOPPED: "stopped",
+});
+```
+The second type parameter `V` is inferred as `"running" | "stopped"`, which forces TypeScript to
+infer the first type parameter `T` as an object whose values are the specific string values that
+make up `V`. Hence, even though `{ RUNNING: "running", "STOPPED": "stopped" }` would have type
+`{ RUNNING: string; STOPPED: string; }`, passing it through `Enum` causes its type to be inferred
+instead as the desired
+
+``` javascript
+// Type, not object literal.
+{
+    RUNNING: "running";
+    STOPPED: "stopped";
 }
 ```
 
@@ -188,10 +231,20 @@ previous step, we get a value which might be any one of the object's values, and
 the union of the types of the object's values. Hence, `Enum<typeof Enum("RUNNING", "STOPPED")>`
 evaluates to `"RUNNING" | "STOPPED"`, which is what we want.
 
+By contrast, the type definition for the case which takes an object of keys and values is
+
+``` javascript
+function Enum<
+    T extends { [_: string]: V },
+    V extends string
+>(definition: T): T
+```
+
 ## Acknowledgements
 
 This libary is heavily inspired by posts in
 [this thread](https://github.com/Microsoft/TypeScript/issues/3192). In particular, credit goes to
-users **[@igrayson](https://github.com/igrayson)** and **[@nahuel](https://github.com/nahuel)**.
+users **[@igrayson](https://github.com/igrayson)**, **[@nahuel](https://github.com/nahuel)**,
+and **[@kourge](https://github.com/kourge).
 
 Copyright © 2017 David Philipson
