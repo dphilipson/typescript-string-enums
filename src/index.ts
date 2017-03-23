@@ -16,3 +16,31 @@ export function Enum(...values: any[]): object {
 }
 
 export type Enum<T extends object> = T[keyof T];
+
+export namespace Enum {
+    function hasOwnProperty(obj: object, prop: string): boolean {
+        return Object.prototype.hasOwnProperty.call(obj, prop);
+    }
+
+    export function keys<
+        T extends { [_: string]: any }
+    >(e: T): Array<keyof T> {
+        const result: string[] = [];
+        for (const prop in e) {
+            if (hasOwnProperty(e, prop)) {
+                result.push(prop);
+            }
+        }
+        return result as Array<keyof T>;
+    }
+
+    export function values<
+        T extends { [_: string]: any }
+    >(e: T): Array<Enum<T>> {
+        const result: Array<Enum<T>> = [];
+        for (const key of keys(e)) {
+            result.push(e[key as string]);
+        }
+        return result;
+    }
+}
