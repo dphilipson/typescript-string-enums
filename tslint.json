@@ -4,6 +4,7 @@
 		"interface-name": [
 			true, "never-prefix"
 		],
+		"no-namespace": false,
 		"object-literal-sort-keys": false
 	}
 }
