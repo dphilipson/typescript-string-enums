@@ -8,4 +8,11 @@ describe("Enum", () => {
     it("returns an object with values equal to keys given a single string", () => {
         expect(Enum("BLACK")).toEqual({ BLACK: "BLACK" });
     });
+
+    it("returns the original object given an object", () => {
+        expect(Enum({
+            BLACK: "black",
+            WHITE: "white",
+        })).toEqual({ BLACK: "black", WHITE: "white" });
+    });
 });
