@@ -82,6 +82,26 @@ export type Status = Enum<typeof Status>;
 console.log(Status.RUNNING); // -> "running"
 ```
 
+Two helper functions are provided: `Enum.keys()` and `Enum.values()`, which resemble `Object.keys()`
+and `Object.values()` but provide strict typing in their return type:
+
+``` javascript
+const FileType = Enum({
+  PDF: "application/pdf",
+  Text: "text/plain",
+  JPEG: "image/jpeg",
+});
+type FileType = Enum<typeof FileType>;
+
+const keys = Enum.keys(FileType);
+// Inferred type: ("PDF" | "Text" | "JPEG")[]
+// Return value: ["PDF", "Text", "JPEG"] (not necessarily in that order)
+
+const values = Enum.values(FileType);
+// Inferred type: ("application/pdf" | "text/plain" | "image/jpeg")[]
+// Return value: ["application/pdf", "text/plain", "image/jpeg"] (not necessarily in that order)
+```
+
 ## Motivation
 
 Enums are useful for cleanly specifying a type that can take one of a few specific values.
@@ -127,7 +147,8 @@ I might try to solve both problems by introducing constants for the string liter
 issues as well:
 
 ``` javascript
-type Status = "RUNNING" | "STOPPED";
+// Typo on "STOPPED" not caught by anything below without additional boilerplate.
+type Status = "RUNNING" | "STPOPED";
 
 // Naive attempts to define constants for these don't work.
 const StatusNaive = {
