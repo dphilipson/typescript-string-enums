@@ -266,6 +266,6 @@ function Enum<
 This libary is heavily inspired by posts in
 [this thread](https://github.com/Microsoft/TypeScript/issues/3192). In particular, credit goes to
 users **[@igrayson](https://github.com/igrayson)**, **[@nahuel](https://github.com/nahuel)**,
-and **[@kourge](https://github.com/kourge).
+and **[@kourge](https://github.com/kourge)**.
 
 Copyright © 2017 David Philipson
