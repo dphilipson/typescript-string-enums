@@ -18,20 +18,10 @@ export function Enum(...values: any[]): object {
 export type Enum<T extends object> = T[keyof T];
 
 export namespace Enum {
-    function hasOwnProperty(obj: object, prop: string): boolean {
-        return Object.prototype.hasOwnProperty.call(obj, prop);
-    }
-
     export function keys<
         T extends { [_: string]: any }
     >(e: T): Array<keyof T> {
-        const result: string[] = [];
-        for (const prop in e) {
-            if (hasOwnProperty(e, prop)) {
-                result.push(prop);
-            }
-        }
-        return result as Array<keyof T>;
+        return Object.keys(e) as Array<keyof T>;
     }
 
     export function values<
