@@ -10,6 +10,9 @@ Typesafe string enums in TypeScript.
 npm install --save typescript-string-enums
 ```
 
+This library requires TypeScript 2.2 or later. If you require TypeScript 2.1 compatibility, version
+0.2.0 of this library is the last one with support.
+
 ## Usage
 
 Define an enum as follows:
