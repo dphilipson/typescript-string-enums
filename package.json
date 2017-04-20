@@ -33,7 +33,7 @@
     "watch": "yarn run clean && tsc --watch"
   },
   "devDependencies": {
-    "@types/jest": "^16.0.4",
+    "@types/jest": "^19.2.2",
     "jest": "^18.1.0",
     "ts-jest": "^18.0.1",
     "tslint": "^4.3.1",
