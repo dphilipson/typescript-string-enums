@@ -25,7 +25,7 @@ describe("Enum.keys", () => {
         });
         expect(Enum.keys(e)).toEqual(expect.arrayContaining([ "WHITE", "BLACK" ]));
     });
-};
+});
 
 describe("Enum.values", () => {
     it("returns the values of an enum object", () => {
@@ -34,5 +34,20 @@ describe("Enum.values", () => {
             WHITE: "white",
         });
         expect(Enum.values(e)).toEqual(expect.arrayContaining([ "white", "black" ]));
+    });
+});
+
+describe("Enum.isType", () => {
+    const Color = Enum({
+        BLACK: "black",
+        WHITE: "white",
+    });
+
+    it("returns true if value is of type", () => {
+        expect(Enum.isType(Color, "black")).toBe(true);
+    });
+
+    it("returns false if value is not of type", () => {
+        expect(Enum.isType(Color, "BLACK")).toBe(false);
     });
 });

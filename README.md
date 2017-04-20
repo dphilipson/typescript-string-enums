@@ -85,8 +85,8 @@ export type Status = Enum<typeof Status>;
 console.log(Status.RUNNING); // -> "running"
 ```
 
-Two helper functions are provided: `Enum.keys()` and `Enum.values()`, which resemble `Object.keys()`
-and `Object.values()` but provide strict typing in their return type:
+Several helper functions are provided. First are `Enum.keys()` and `Enum.values()`, which resemble
+`Object.keys()` and `Object.values()` but provide strict typing in their return type:
 
 ``` javascript
 const FileType = Enum({
@@ -103,6 +103,27 @@ const keys = Enum.keys(FileType);
 const values = Enum.values(FileType);
 // Inferred type: ("application/pdf" | "text/plain" | "image/jpeg")[]
 // Return value: ["application/pdf", "text/plain", "image/jpeg"] (not necessarily in that order)
+```
+
+Also available is `Enum.isType()`, which checks if a value is of a given enum type and can be used
+as a type guard.
+
+``` javascript
+const Color = Enum({
+    BLACK: "black",
+    WHITE: "white",
+});
+type Color = Enum<typeof Color>;
+
+let selectedColor: Color;
+
+const colorString = getUserInputString(); // Unsanitized string.
+if (Enum.isType(Color, colorString)) {
+    // Allowed because within type guard.
+    selectedColor = colorString;
+} else {
+    throw new Error(`${colorString} is not a valid color`);
+}
 ```
 
 ## Motivation
