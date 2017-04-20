@@ -109,10 +109,7 @@ Also available is `Enum.isType()`, which checks if a value is of a given enum ty
 as a type guard.
 
 ``` javascript
-const Color = Enum({
-    BLACK: "black",
-    WHITE: "white",
-});
+const Color = Enum("RED", "GREEN", "BLUE", "PUCE");
 type Color = Enum<typeof Color>;
 
 let selectedColor: Color;
