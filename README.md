@@ -273,15 +273,6 @@ previous step, we get a value which might be any one of the object's values, and
 the union of the types of the object's values. Hence, `Enum<typeof Enum("RUNNING", "STOPPED")>`
 evaluates to `"RUNNING" | "STOPPED"`, which is what we want.
 
-By contrast, the type definition for the case which takes an object of keys and values is
-
-``` javascript
-function Enum<
-    T extends { [_: string]: V },
-    V extends string
->(definition: T): T
-```
-
 ## Acknowledgements
 
 This libary is heavily inspired by posts in
