@@ -238,7 +238,7 @@ as that key. Hence, the type of `Enum("RUNNING", "STOPPED")` is
 ```
 
 Next, consider the second overload, which handles the case which takes an object of keys and values,
-and for the same of example consider
+and for the sake of example consider
 
 ``` javascript
 const Status = Enum({
