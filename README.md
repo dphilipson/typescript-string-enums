@@ -4,6 +4,16 @@ Typesafe string enums in TypeScript.
 
 [![Build Status](https://travis-ci.org/dphilipson/typescript-string-enums.svg?branch=master)](https://travis-ci.org/dphilipson/typescript-string-enums)
 
+## Table of Contents
+
+* [Installation](#installation)
+* [Usage](#usage)
+* [Motivation](#motivation)
+  - [Why not built-in enums?](#why-not-built-in-enums)
+  - [Why not string literals?](#why-not-string-literals)
+* [How It Works](#how-it-works)
+* [Acknowledgements](#acknowledgements)
+
 ## Installation
 
 ```
