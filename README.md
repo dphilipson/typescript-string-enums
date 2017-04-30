@@ -79,15 +79,9 @@ specified on individual values. For example:
 ``` javascript
 export const Status = Enum({
     /**
-     * Everything is fine.
-     *
      * Hovering over Status.RUNNING in an IDE will show this comment.
      */
     RUNNING: "running",
-
-    /**
-     * All is lost.
-     */
     STOPPED: "stopped",
 });
 export type Status = Enum<typeof Status>;
@@ -100,9 +94,9 @@ Several helper functions are provided. First are `Enum.keys()` and `Enum.values(
 
 ``` javascript
 const FileType = Enum({
-  PDF: "application/pdf",
-  Text: "text/plain",
-  JPEG: "image/jpeg",
+    PDF: "application/pdf",
+    Text: "text/plain",
+    JPEG: "image/jpeg",
 });
 type FileType = Enum<typeof FileType>;
 
@@ -119,14 +113,17 @@ Also available is `Enum.isType()`, which checks if a value is of a given enum ty
 as a type guard.
 
 ``` javascript
-const Color = Enum("RED", "GREEN", "BLUE", "PUCE");
+const Color = Enum("BLACK", "WHITE");
 type Color = Enum<typeof Color>;
 
 let selectedColor: Color;
-
 const colorString = getUserInputString(); // Unsanitized string.
+
+// TypeScript error: Type 'string' is not assignable to type '"BLACK" | "WHITE"'.
+selectedColor = colorString;
+
 if (Enum.isType(Color, colorString)) {
-    // Allowed because within type guard.
+    // No error because within type guard.
     selectedColor = colorString;
 } else {
     throw new Error(`${colorString} is not a valid color`);
@@ -168,11 +165,12 @@ type TriathlonStage = "SWIMMING" | "CYCLING" | "RUNNING";
 Then if at a later stage I want to change `Status` to be `"STARTED" | "STOPPED"`, there's no easy
 way to do it. I can't globally find/replace `"RUNNING"` to `"STARTED"` because it will also change
 the unrelated string constants representing `TriathlonStage`. Instead, I have to examine every
-occurrance of the string `"RUNNING"` to see if it needs to change.
+occurrance of the string `"RUNNING"` to see if it needs to change. Besides, these kinds of global
+non-semantic substitutions should make you nervous.
 
 Another disadvantage of string literals comes when using IDE autocomplete features. It's convenient
 to be able to type `Status.` and have autocomplete suggest `Status.RUNNING` and `Status.STOPPED`,
-but with string literals no such suggestion appears with current IDEs.
+but with string literals no such suggestion is possible.
 
 I might try to solve both problems by introducing constants for the string literals, but this has
 issues as well:
@@ -181,7 +179,7 @@ issues as well:
 // Typo on "STOPPED" not caught by anything below without additional boilerplate.
 type Status = "RUNNING" | "STPOPED";
 
-// Naive attempts to define constants for these don't work.
+// Naive attempts to define constants for these don't work, as shown below.
 const StatusNaive = {
     RUNNING: "RUNNING",
     STOPPED: "STOPPED",
@@ -191,7 +189,8 @@ const StatusNaive = {
 // string which is not assignable to Status.
 const status: Status = StatusNaive.RUNNING;
 
-// Correctly defining constants is annoyingly repetitive.
+// Correctly defining constants is annoyingly repetitive. I shouldn't need to
+// write each value three times.
 const Status = {
     RUNNING: "RUNNING" as "RUNNING",
     STOPPED: "STOPPED" as "STOPPED",
