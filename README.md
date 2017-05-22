@@ -158,7 +158,7 @@ the keys of an enum rather than the values. For example:
 const ErrorColor = Enum({ OK: "green", ERROR: "red" });
 type ErrorColor = Enum<typeof ErrorColor>;
 
-const ErrorLevel = Enum.ofKeys(ErrorCodes);
+const ErrorLevel = Enum.ofKeys(ErrorColor);
 
 const errorLevel = getErrorLevel();
 
