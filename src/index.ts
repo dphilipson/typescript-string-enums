@@ -18,6 +18,16 @@ export function Enum(...values: any[]): object {
 export type Enum<T extends object> = T[keyof T];
 
 export namespace Enum {
+    export function ofKeys<
+        T extends { [_: string]: any}
+    >(e: T): { [K in keyof T]: K } {
+        const result: any = {};
+        for (const key of Object.keys(e)) {
+            result[key] = key;
+        }
+        return result;
+    }
+
     export function keys<
         T extends { [_: string]: any }
     >(e: T): Array<keyof T> {
@@ -28,8 +38,8 @@ export namespace Enum {
         T extends { [_: string]: any }
     >(e: T): Array<Enum<T>> {
         const result: Array<Enum<T>> = [];
-        for (const key of keys(e)) {
-            result.push(e[key as string]);
+        for (const key of Object.keys(e)) {
+            result.push(e[key]);
         }
         return result;
     }
