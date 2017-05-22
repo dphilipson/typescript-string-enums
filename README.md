@@ -8,6 +8,12 @@ Typesafe string enums in TypeScript.
 
 * [Installation](#installation)
 * [Usage](#usage)
+  - [Creating and using enums](#creating-and-using-enums)
+  - [Additional functions](#additional-functions)
+    - [Enum.isType(enum, value)](#enum-istype-enum-value)
+    - [Enum.keys(enum)](#enum-keys-enum)
+    - [Enum.values(enum)](#enum-values-enum)
+    - [Enum.ofKeys(object)](#enum-ofkeys-object)
 * [Motivation](#motivation)
   - [Why not built-in enums?](#why-not-built-in-enums)
   - [Why not string literals?](#why-not-string-literals)
@@ -24,6 +30,8 @@ This library requires TypeScript 2.2 or later. If you require TypeScript 2.1 com
 0.2.0 of this library is the last one with support.
 
 ## Usage
+
+### Creating and using enums
 
 Define an enum as follows:
 
@@ -89,8 +97,39 @@ export type Status = Enum<typeof Status>;
 console.log(Status.RUNNING); // -> "running"
 ```
 
-Several helper functions are provided. First are `Enum.keys()` and `Enum.values()`, which resemble
-`Object.keys()` and `Object.values()` but provide strict typing in their return type:
+### Additional functions
+
+#### `Enum.isType(enum, value)`
+
+`Enum.isType` checks if a value is of a given enum type and can be used as a type guard. For example:
+
+``` javascript
+const Color = Enum("BLACK", "WHITE");
+type Color = Enum<typeof Color>;
+
+let selectedColor: Color;
+const colorString = getUserInputString(); // Unsanitized string.
+
+// TypeScript error: Type 'string' is not assignable to type '"BLACK" | "WHITE"'.
+selectedColor = colorString;
+
+if (Enum.isType(Color, colorString)) {
+    // No error this time because within type guard.
+    selectedColor = colorString;
+} else {
+    throw new Error(`${colorString} is not a valid color`);
+}
+```
+
+#### `Enum.keys(enum)`
+
+Resembles `Object.keys()`, but provides strict typing in its return type.
+
+#### `Enum.values(enum)`
+
+Resembles `Object.values()`, but provides strict typing in its return type.
+
+Example of both `Enum.keys()` and `Enum.values()`:
 
 ``` javascript
 const FileType = Enum({
@@ -109,24 +148,22 @@ const values = Enum.values(FileType);
 // Return value: ["application/pdf", "text/plain", "image/jpeg"] (not necessarily in that order)
 ```
 
-Also available is `Enum.isType()`, which checks if a value is of a given enum type and can be used
-as a type guard.
+#### Enum.ofKeys(object)
+
+Creates a new enum with the same keys as the provided enum or object and whose values are equal to
+its keys. This is most useful if for some reason it is necessary to do string comparisons against
+the keys of an enum rather than the values. For example:
 
 ``` javascript
-const Color = Enum("BLACK", "WHITE");
-type Color = Enum<typeof Color>;
+const ErrorColor = Enum({ OK: "green", ERROR: "red" });
+type ErrorColor = Enum<typeof ErrorColor>;
 
-let selectedColor: Color;
-const colorString = getUserInputString(); // Unsanitized string.
+const ErrorLevel = Enum.ofKeys(ErrorCodes);
 
-// TypeScript error: Type 'string' is not assignable to type '"BLACK" | "WHITE"'.
-selectedColor = colorString;
+const errorLevel = getErrorLevel();
 
-if (Enum.isType(Color, colorString)) {
-    // No error because within type guard.
-    selectedColor = colorString;
-} else {
-    throw new Error(`${colorString} is not a valid color`);
+if (errorLevel === ErrorLevel.ERROR) {
+    ...
 }
 ```
 

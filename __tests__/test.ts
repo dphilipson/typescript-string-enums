@@ -17,6 +17,15 @@ describe("Enum", () => {
     });
 });
 
+describe("Enum.ofKeys", () => {
+    it("returns an object with keys and values equal to keys of input object", () => {
+        expect(Enum.ofKeys({
+            BLACK: "black",
+            WHITE: "white",
+        })).toEqual({ BLACK: "BLACK", WHITE: "WHITE" });
+    });
+});
+
 describe("Enum.keys", () => {
     it("returns the keys of an enum object", () => {
         const e = Enum({
