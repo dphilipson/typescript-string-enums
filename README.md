@@ -1,8 +1,17 @@
 # TypeScript String Enums
 
-Typesafe string enums in TypeScript.
+Typesafe string enums in TypeScript pre-2.4.
 
-[![Build Status](https://travis-ci.org/dphilipson/typescript-string-enums.svg?branch=master)](https://travis-ci.org/dphilipson/typescript-string-enums)
+[![Build
+Status](https://travis-ci.org/dphilipson/typescript-string-enums.svg?branch=master)](https://travis-ci.org/dphilipson/typescript-string-enums)
+
+**As of TypeScript 2.4, this library is made mostly obsolete by native string
+enums** (see the
+[announcement](https://blogs.msdn.microsoft.com/typescript/2017/06/27/announcing-typescript-2-4/)).
+I recommend that most users who are on at least TypeScript 2.4 now use native
+enums instead. There are still a few minor reasons to continue to use this
+library, as discussed in the [Advantages over native string
+enums](#advantages-over-native-string-enums) section.
 
 ## Table of Contents
 
@@ -18,6 +27,7 @@ Typesafe string enums in TypeScript.
   - [Why not built-in enums?](#why-not-built-in-enums)
   - [Why not string literals?](#why-not-string-literals)
 * [How It Works](#how-it-works)
+* [Advantages over native string enums](#advantages-over-native-string-enums)
 * [Acknowledgements](#acknowledgements)
 
 ## Installation
@@ -26,8 +36,8 @@ Typesafe string enums in TypeScript.
 npm install --save typescript-string-enums
 ```
 
-This library requires TypeScript 2.2 or later. If you require TypeScript 2.1 compatibility, version
-0.2.0 of this library is the last one with support.
+This library requires TypeScript 2.2 or later. If you require TypeScript 2.1
+compatibility, version 0.2.0 of this library is the last one with support.
 
 ## Usage
 
@@ -80,9 +90,10 @@ function saySomethingAboutState(state: State) {
 }
 ```
 
-Instead of a list of values, an object may be passed instead if it is desired that the string values
-be different from the constant names. This also has the advantage of allowing JSDoc comments to be
-specified on individual values. For example:
+Instead of a list of values, an object may be passed instead if it is desired
+that the string values be different from the constant names. This also has the
+advantage of allowing JSDoc comments to be specified on individual values. For
+example:
 
 ``` javascript
 export const Status = Enum({
@@ -101,7 +112,8 @@ console.log(Status.RUNNING); // -> "running"
 
 #### `Enum.isType(enum, value)`
 
-`Enum.isType` checks if a value is of a given enum type and can be used as a type guard. For example:
+`Enum.isType` checks if a value is of a given enum type and can be used as a
+type guard. For example:
 
 ``` javascript
 const Color = Enum("BLACK", "WHITE");
@@ -150,9 +162,10 @@ const values = Enum.values(FileType);
 
 #### Enum.ofKeys(object)
 
-Creates a new enum with the same keys as the provided enum or object and whose values are equal to
-its keys. This is most useful if for some reason it is necessary to do string comparisons against
-the keys of an enum rather than the values. For example:
+Creates a new enum with the same keys as the provided enum or object and whose
+values are equal to its keys. This is most useful if for some reason it is
+necessary to do string comparisons against the keys of an enum rather than the
+values. For example:
 
 ``` javascript
 const ErrorColor = Enum({ OK: "green", ERROR: "red" });
@@ -169,15 +182,17 @@ if (errorLevel === ErrorLevel.ERROR) {
 
 ## Motivation
 
-Enums are useful for cleanly specifying a type that can take one of a few specific values.
-TypeScript users typically implement enums in one of two ways: built-in
-[TypeScript enums](https://www.typescriptlang.org/docs/handbook/enums.html) or string literals, but
-each of these has drawbacks.
+Enums are useful for cleanly specifying a type that can take one of a few
+specific values. TypeScript users typically implement enums in one of two ways:
+built-in [TypeScript
+enums](https://www.typescriptlang.org/docs/handbook/enums.html) or string
+literals, but each of these has drawbacks.
 
 ### Why not built-in enums?
 
-Built-in enums have one big drawback. Their runtime value is a number, which is annoying during
-development and makes them unsuitable for use with external APIs.
+Built-in enums have one big drawback. Their runtime value is a number, which is
+annoying during development and makes them unsuitable for use with external
+APIs.
 
 ``` javascript
 enum Status {
@@ -199,18 +214,20 @@ type Status = "RUNNING" | "STOPPED";
 type TriathlonStage = "SWIMMING" | "CYCLING" | "RUNNING";
 ```
 
-Then if at a later stage I want to change `Status` to be `"STARTED" | "STOPPED"`, there's no easy
-way to do it. I can't globally find/replace `"RUNNING"` to `"STARTED"` because it will also change
-the unrelated string constants representing `TriathlonStage`. Instead, I have to examine every
-occurrance of the string `"RUNNING"` to see if it needs to change. Besides, these kinds of global
-non-semantic substitutions should make you nervous.
+Then if at a later stage I want to change `Status` to be `"STARTED" |
+"STOPPED"`, there's no easy way to do it. I can't globally find/replace
+`"RUNNING"` to `"STARTED"` because it will also change the unrelated string
+constants representing `TriathlonStage`. Instead, I have to examine every
+occurrance of the string `"RUNNING"` to see if it needs to change. Besides,
+these kinds of global non-semantic substitutions should make you nervous.
 
-Another disadvantage of string literals comes when using IDE autocomplete features. It's convenient
-to be able to type `Status.` and have autocomplete suggest `Status.RUNNING` and `Status.STOPPED`,
-but with string literals no such suggestion is possible.
+Another disadvantage of string literals comes when using IDE autocomplete
+features. It's convenient to be able to type `Status.` and have autocomplete
+suggest `Status.RUNNING` and `Status.STOPPED`, but with string literals no such
+suggestion is possible.
 
-I might try to solve both problems by introducing constants for the string literals, but this has
-issues as well:
+I might try to solve both problems by introducing constants for the string
+literals, but this has issues as well:
 
 ``` javascript
 // Typo on "STOPPED" not caught by anything below without additional boilerplate.
@@ -234,15 +251,16 @@ const Status = {
 };
 ```
 
-This library is effectively a programmatic version of these repetitive definitions. It attempts to
-provide the best of both worlds: string enums with the convenience of built-in enums.
+This library is effectively a programmatic version of these repetitive
+definitions. It attempts to provide the best of both worlds: string enums with
+the convenience of built-in enums.
 
 ## How It Works
 
-This section is not necessary to use this library, but for those curious about how it is
-implemented, read on. The explanation uses the concepts of index types and mapped types, as
-described in TypeScript's
-[Advanced Types](https://www.typescriptlang.org/docs/handbook/advanced-types.html) page.
+This section is not necessary to use this library, but for those curious about
+how it is implemented, read on. The explanation uses the concepts of index types
+and mapped types, as described in TypeScript's [Advanced
+Types](https://www.typescriptlang.org/docs/handbook/advanced-types.html) page.
 
 The relevant type declarations are as follows:
 
@@ -258,22 +276,24 @@ function Enum<
 type Enum<T> = T[keyof T];
 ```
 
-We are creating a overloaded function named `Enum` and a type named `Enum`, so both can be imported
-with a single symbol.
+We are creating a overloaded function named `Enum` and a type named `Enum`, so
+both can be imported with a single symbol.
 
-Consider the first overload, which handles the case of variadic arguments representing the enum
-values. In TypeScript, a string constant is a type (for example, in `const foo = "Hello"`, the
-variable `foo` is assigned type `"Hello"`). This means that the array
+Consider the first overload, which handles the case of variadic arguments
+representing the enum values. In TypeScript, a string constant is a type (for
+example, in `const foo = "Hello"`, the variable `foo` is assigned type
+`"Hello"`). This means that the array
 
 ``` javascript
 ["RUNNING", "STOPPED"]
 ```
 
-can be inferred to have type `("RUNNING" | "STOPPED")[]`, and so when it is passed into a function
-with the above type signature, the type parameter `V` is thus inferred to be
-`"RUNNING" | "STOPPED"`. Then the return type `{ [K in V]: K }` is a mapped type which describes an
-object whose keys are the types that make up `V` and for each such key has a value of the same type
-as that key. Hence, the type of `Enum("RUNNING", "STOPPED")` is
+can be inferred to have type `("RUNNING" | "STOPPED")[]`, and so when it is
+passed into a function with the above type signature, the type parameter `V` is
+thus inferred to be `"RUNNING" | "STOPPED"`. Then the return type `{ [K in V]: K
+}` is a mapped type which describes an object whose keys are the types that make
+up `V` and for each such key has a value of the same type as that key. Hence,
+the type of `Enum("RUNNING", "STOPPED")` is
 
 ``` javascript
 // This is a type, not an object literal.
@@ -283,8 +303,8 @@ as that key. Hence, the type of `Enum("RUNNING", "STOPPED")` is
 }
 ```
 
-Next, consider the second overload, which handles the case which takes an object of keys and values,
-and for the sake of example consider
+Next, consider the second overload, which handles the case which takes an object
+of keys and values, and for the sake of example consider
 
 ``` javascript
 const Status = Enum({
@@ -292,10 +312,11 @@ const Status = Enum({
     STOPPED: "stopped",
 });
 ```
-The second type parameter `V` is inferred as `"running" | "stopped"`, which forces TypeScript to
-infer the first type parameter `T` as an object whose values are the specific string values that
-make up `V`. Hence, even though `{ RUNNING: "running", "STOPPED": "stopped" }` would have type
-`{ RUNNING: string; STOPPED: string; }`, passing it through `Enum` causes its type to be inferred
+The second type parameter `V` is inferred as `"running" | "stopped"`, which
+forces TypeScript to infer the first type parameter `T` as an object whose
+values are the specific string values that make up `V`. Hence, even though `{
+RUNNING: "running", "STOPPED": "stopped" }` would have type `{ RUNNING: string;
+STOPPED: string; }`, passing it through `Enum` causes its type to be inferred
 instead as the desired
 
 ``` javascript
@@ -312,18 +333,46 @@ Next, consider the definition
 type Enum<T> = T[keyof T];
 ```
 
-This is an index type which describes, for a given keyed type `T`, the type obtained by indexing
-into `T` with an arbitrary one of its keys (the syntax `T[keyof T]` is meant to evoke the
-expression `t[key]` for some `key` in `t`). When passing in an arbitrary key to the object from the
-previous step, we get a value which might be any one of the object's values, and so its type is thus
-the union of the types of the object's values. Hence, `Enum<typeof Enum("RUNNING", "STOPPED")>`
-evaluates to `"RUNNING" | "STOPPED"`, which is what we want.
+This is an index type which describes, for a given keyed type `T`, the type
+obtained by indexing into `T` with an arbitrary one of its keys (the syntax
+`T[keyof T]` is meant to evoke the expression `t[key]` for some `key` in `t`).
+When passing in an arbitrary key to the object from the previous step, we get a
+value which might be any one of the object's values, and so its type is thus the
+union of the types of the object's values. Hence, `Enum<typeof Enum("RUNNING",
+"STOPPED")>` evaluates to `"RUNNING" | "STOPPED"`, which is what we want.
+
+## Advantages over native string enums
+
+With the addition of native string enums in TypeScript 2.4, this library will be
+unnecessary for most users. There are still a few niche reasons why users may
+still prefer to use this library.
+
+* This library provides several helper functions which cannot easy be
+  implemented for native enums. Of these, `Enum.isType()` will likely be the
+  most useful.
+* Defining a native string enum involves a bit of repetition, as each value must
+  be written twice:
+  ```ts
+  enum Color {
+      RED = "RED",
+      GREEN = "GREEN",
+      BLUE = "BLUE"
+  }
+  ```
+  vs
+  ```ts
+  const Color = Enum("RED", "GREEN", "BLUE");
+  type Color = Enum<typeof Color>;
+  ```
+  If there are many values, it may be desirable to avoid the repetition and
+  corresponding possibility for typos.
 
 ## Acknowledgements
 
-This libary is heavily inspired by posts in
-[this thread](https://github.com/Microsoft/TypeScript/issues/3192). In particular, credit goes to
-users **[@igrayson](https://github.com/igrayson)**, **[@nahuel](https://github.com/nahuel)**,
-and **[@kourge](https://github.com/kourge)**.
+This libary is heavily inspired by posts in [this
+thread](https://github.com/Microsoft/TypeScript/issues/3192). In particular,
+credit goes to users **[@igrayson](https://github.com/igrayson)**,
+**[@nahuel](https://github.com/nahuel)**, and
+**[@kourge](https://github.com/kourge)**.
 
 Copyright © 2017 David Philipson
