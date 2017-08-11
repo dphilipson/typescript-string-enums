@@ -46,7 +46,7 @@ export namespace Enum {
 
     export function isType<
         T extends { [_: string]: any }
-    >(e: T, value: string): value is Enum<T> {
+    >(e: T, value: any): value is Enum<T> {
         return values(e).indexOf(value) !== -1;
     }
 }

@@ -348,7 +348,7 @@ unnecessary for most users. There are still a few niche reasons why users may
 still prefer to use this library.
 
 * This library provides several helper functions which cannot easy be
-  implemented for native enums. Of these, `Enum.isType()` will likely be the
+  implemented for native enums. Of these, [`Enum.isType()`](#enumistypeenum-value) will likely be the
   most useful.
 * Defining a native string enum involves a bit of repetition, as each value must
   be written twice:
